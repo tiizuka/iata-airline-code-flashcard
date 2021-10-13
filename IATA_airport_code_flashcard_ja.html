@@ -1,0 +1,56 @@
+<html><body>
+<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+<script src="./IATA_airport_code_flashcard_ja.data.js" charset="utf-8"></script>
+<style>
+#app { margin: 5rem }
+.code    { font-size: 10rem; font-weight: bold; font-family: system-ui }
+.name    { font-size: 3rem; margin-left: 15rem; color: #eee }
+.country { font-size: 2rem; margin-left: 1rem; color: #f4f4f4 }
+</style>
+<div id="app">
+  <span class="code"    >{{ entry.code }}</span>
+  <span class="name"    >{{ entry.name }}</span>
+  <span class="country">({{ entry.country }})</span>
+</div>
+<script>
+var app = new Vue({
+  el: '#app',
+  data: {
+    lines: IATA_airport_code_ja,
+    hist: [],
+    pos: null,
+  },
+  mounted() {
+    document.addEventListener('keydown', this.onKeyDown);
+    this.setNext();
+    this.pos = 0;
+  },
+  computed: {
+    entry() { return this.lines[this.hist[this.pos]] }
+  },
+  methods: {
+    setNext() {
+      this.hist.push( Math.floor(Math.random() * this.lines.length) );
+    },
+    goForward() {
+      if (this.pos === this.hist.length - 1) {
+        this.setNext();
+      }
+      this.pos += 1;
+    },
+    goBackword() {
+      if (this.pos !== 0) {
+        this.pos -= 1;
+      }
+    },
+    onKeyDown(event) {
+      switch (event.key) {
+        case 'ArrowRight': this.goForward();  break;
+        case 'ArrowLeft':  this.goBackword(); break;
+        default:
+      }
+    }
+  }
+})
+</script>
+</body></html> 
